@@ -8,13 +8,13 @@
 
 - name: Remove previous tarFile
   file: 
-    path: ~/test.tar.gz
+    path: /tmp/test.tar.gz
     state: absent
 
 - name: compress all the files in tar.gz
   archive:
     path: "{{ files_to_archive }}"
-    dest: ~/test.tar.gz
+    dest: /tmp/test.tar.gz
     format: gz
   vars:
     files_to_archive: "{{ files.files | map(attribute='path') | list }}"
