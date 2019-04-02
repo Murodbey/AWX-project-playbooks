@@ -15,15 +15,15 @@
     
     - name: Create files with date and size 
       include: file_creation_size_date.yaml
-      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' or ansible_distribution == 'RedHat'
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' or ansible_distribution == 'CentOS'
       ignore_errors: True
 
     - name: Archive files by age
       include: finding_archiving_age.yaml
-      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' or ansible_distribution == 'RedHat'
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' or ansible_distribution == 'CentOS'
       ignore_errors: True
 
     - name: Archive files by size
       include: finding_archiving_size.yaml
-      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' or ansible_distribution == 'RedHat'
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' or ansible_distribution == 'CentOS'
       ignore_errors: True
