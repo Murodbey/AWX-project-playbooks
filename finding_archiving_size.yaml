@@ -14,7 +14,7 @@
 - name: compress all the files in tar.gz
   archive:
     path: "{{ files_to_archive }}"
-    dest: /var/tmp/test.tar.gz
+    dest: "/tmp/testfile{{ansible_date_time.date}}.tar.gz"
     format: gz
   vars:
     files_to_archive: "{{ files_to_archive.files | map(attribute='path') | list }}"

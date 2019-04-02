@@ -12,6 +12,11 @@
       include: CentOS.yaml
       when: ansible_os_family == 'CentOS'
       ignore_errors: True
+    
+    - name: Create files with date and size 
+      include: file_creation_size_date.yaml
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' or ansible_distribution == 'RedHat'
+      ignore_errors: True
 
     - name: Archive files by age
       include: finding_archiving_age.yaml
