@@ -8,7 +8,7 @@
 
 - name: Remove previous tarFile
   file: 
-    path: /var/tmp/test.tar.gz
+    path: /var/tmp/testfile.tar.gz
     state: absent
 
 - name: compress all the files in tar.gz
