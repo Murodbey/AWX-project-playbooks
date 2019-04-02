@@ -2,3 +2,9 @@
   shell: dd if=/dev/urandom of=test.txt bs=64M count=1
 - name: Creating files with date
   shell: touch -d 20111111  /tmp/test{1..10}
+
+#- file:
+    #path: /tmp/
+    #owner: root
+    #group: root
+    #state: touch
