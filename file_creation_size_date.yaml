@@ -1,4 +1,4 @@
 - name: Creating 1GB file
-  shell: dd if=/dev/urandom of=test.txt bs=1g count=1
+  shell: dd if=/dev/urandom of=test.txt bs=1G count=1
 - name: Creating files with date
   shell: touch -d 20111111  /tmp/test{1..10}
