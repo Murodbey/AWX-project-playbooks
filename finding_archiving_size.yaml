@@ -1,6 +1,6 @@
 - name: Check all files
   find: 
-    paths: /var/tmp
+    paths: /tmp
     file_type: any
     size: 2g
   register: files_to_archive
@@ -8,13 +8,13 @@
 
 - name: Remove previous tarFile
   file: 
-    path: /tmp/test.tar.gz
+    path: ~/test.tar.gz
     state: absent
 
 - name: compress all the files in tar.gz
   archive:
     path: "{{ files_to_archive }}"
-    dest: /tmp/test.tar.gz
+    dest: ~/test.tar.gz
     format: gz
   vars:
     files_to_archive: "{{ files_to_archive.files | map(attribute='path') | list }}"
