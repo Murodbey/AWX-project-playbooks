@@ -1,5 +1,10 @@
 - name: Install packages on CentOS7
   when: ansible_distribution == 'CentOS'
   yum:
-    name: ['vim', 'tree', 'telnet'] 
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - vim
+    - tree
+    - telnet 
     state: latest

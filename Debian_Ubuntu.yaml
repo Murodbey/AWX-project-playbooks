@@ -1,5 +1,10 @@
 - name: Install packages on Debian and Ubuntu
   when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu'
   apt:
-    name: ['vim', 'tree', 'telnet'] 
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - vim
+    - tree
+    - telnet 
     state: latest
