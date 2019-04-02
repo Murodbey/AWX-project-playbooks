@@ -3,7 +3,7 @@
     paths: /var/tmp
     file_type: any
     age: 90d
-  #register: files
+  register: files
   #failed_when: files.matched < 10
 
 - name: Remove previous tarFile
