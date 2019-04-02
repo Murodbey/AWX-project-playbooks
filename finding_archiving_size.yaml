@@ -17,4 +17,4 @@
     dest: "/tmp/testfile{{ansible_date_time.date}}.tar.gz"
     format: gz
   vars:
-    files_to_archive: "{{ files_to_archive.files | map(attribute='path') | list }}"
+    files_to_archive: ""{{ lookup('dict', paths) }}""
