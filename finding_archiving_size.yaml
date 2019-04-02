@@ -2,7 +2,7 @@
   find: 
     paths: /var/tmp
     file_type: any
-    size: 2g
+    size: 64M
   register: files_to_archive
   #failed_when: files.matched < 10
 
