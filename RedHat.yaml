@@ -1,0 +1,5 @@
+- name: Install packages on CentOS7
+  when: ansible_distribution == 'RedHat'
+  yum:
+    name: ['vim', 'tree', 'telnet'] 
+    state: latest

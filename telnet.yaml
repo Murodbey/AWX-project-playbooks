@@ -1,9 +1,0 @@
----
-- hosts: all
-  become: yes
-  become_method: sudo
-  tasks:
-    - name: Install telnet
-      package:
-        name: telnet
-        state: present

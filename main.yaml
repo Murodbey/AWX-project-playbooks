@@ -1,0 +1,24 @@
+---
+- hosts: all
+  become: true
+  become_method: sudo 
+  tasks: 
+    - name: Install vim/tree/telnet on Debian/Ubuntu
+      include: Debian_Ubuntu.yaml
+      when: ansible_os_family == 'Debian'
+      ignore_errors: True
+
+    - name: Install vim/tree/telnet on RedHat
+      include: RedHat.yaml
+      when: ansible_os_family == 'RedHat'
+      ignore_errors: True
+
+    - name: Archive files by age
+      include: finding_archiving_age.yaml
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' or ansible_distribution == 'RedHat'
+      ignore_errors: True
+
+    - name: Archive files by size
+      include: finding_archiving_size.yaml
+      when: ansible_distribution == 'Debian' or ansible_distribution == 'Ubuntu' or ansible_distribution == 'RedHat'
+      ignore_errors: True
