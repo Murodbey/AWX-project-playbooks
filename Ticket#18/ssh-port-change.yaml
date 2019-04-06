@@ -1,0 +1,24 @@
+---
+- name: ssh-port changing
+  hosts: all
+  #gather_facts: no
+  remote_user: root
+  tasks:
+  - name: Setup alternate SSH port
+    lineinfile:
+      dest: "/etc/ssh/sshd_config"
+      regexp: "^Port"
+      line: "Port 8875"
+   # notify: "Restart sshd"
+
+  - name: Setup selinux for alternate SSH port
+    seport:
+      ports: "8875"
+      proto: "tcp"
+      setype: "ssh_port_t"
+      state: "present"
+
+  - name: Restart sshd
+    service:
+      name: sshd
+      state: restarted
