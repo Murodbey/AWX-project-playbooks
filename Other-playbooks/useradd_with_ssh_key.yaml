@@ -1,0 +1,54 @@
+---
+- name: add user and generate key, print public key
+  hosts: "bastion_host"
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: Remove the user 'ansible'
+    user: 
+      name: ansible 
+      state: absent 
+      remove: yes
+
+- name: Add the user 'ansible'
+  user:
+    name: ansible
+    create_home: true
+    shell: /bin/bash
+    uid: 2222
+    generate_ssh_key: true
+    ssh_key_bits: 2048
+    state: present 
+    register: new_user_key
+- debug: msg="{{ new_user_key.ssh_public_key }}"
+
+---
+- name:
+  hosts: "{{hosts}}"
+  become: yes
+  become_method: sudo
+  loop:
+    #- ubuntu
+    - centos
+    #- debian
+  tasks:
+  - name: add or removes an SSH authorized key
+    authorized_key:
+      user: "ansible"
+      state: "present"
+      key: "{{new_user_key}}"
+      dest: "/home/ansible/.ssh/authorized_keys"
+    var:
+      new_user_key: "{{ files | map(attribute='key') | list }}"
+    
+---
+- name:
+  hosts: all
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: Ping all the remote systems
+    ping:
+
+  - name: checking the user at remote host
+    shell: id ansible

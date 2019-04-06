@@ -1,0 +1,45 @@
+# - name: ssh-port changing
+#   hosts: 
+#   #gather_facts: no
+#   remote_user: root
+#   tasks:
+#     - name: Create a security group
+#       ec2_group:
+#         name: "{{ security_group }}"
+#         description: The webservers security group
+#         region: "{{ region }}"
+#         #aws_access_key: "{{ aws_access_key }}"
+#         #aws_secret_key: "{{ aws_secret_key }}"
+#         rules:
+#           - proto: tcp
+#             from_port: 22
+#             to_port: 22
+#             cidr_ip: 0.0.0.0/0
+#           - proto: tcp
+#             from_port: 80
+#             to_port: 80
+#             cidr_ip: 0.0.0.0/0
+#           - proto: tcp
+#             from_port: 8875
+#             to_port: 8875
+#             cidr_ip: 0.0.0.0/0
+#         rules_egress:
+#           - proto: all
+#             cidr_ip: 0.0.0.0/0
+
+
+#   - name: install firewalld
+#     when: (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7")
+#     package:
+#       name: firewalld
+#       state: latest
+
+#   - name: start firewall
+#     when: (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7")
+#     systemd:
+#       name: firewalld
+#       state: started
+
+#   - name: Open port 8875
+#     when: (ansible_distribution == "CentOS" and ansible_distribution_major_version == "7")
+#     command: "firewall-cmd --zone=public --add-port=8875/tcp --permanent"            

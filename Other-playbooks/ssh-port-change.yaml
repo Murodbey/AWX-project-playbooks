@@ -1,0 +1,36 @@
+---
+- name: ssh-port changing
+  hosts: all
+  #gather_facts: no
+  remote_user: root
+  tasks:
+
+    - name: Check port ansible port 
+      wait_for:
+        port: 22
+        state: "started"
+        #host: "{{ inventory_hostname }}"
+        connect_timeout: 5
+        timeout: 5
+      #delegate_to: "localhost"
+      ignore_errors: "yes"
+      register: ssh_port
+
+    - name: Check port 22
+      wait_for:
+        port: 22
+        state: "started"
+        #host: "{{ inventory_hostname }}" 
+        connect_timeout: 5
+        timeout: 5
+      #delegate_to: 
+      ignore_errors: "yes"
+      register: ssh_port_default
+      when: 
+        - ssh_port is defined 
+        - ssh_port.state is undefined
+
+    - name: Set SSH port to 8875
+      set_fact:
+       ansible_port: 8875
+      when: ssh_port_default.state is defined
