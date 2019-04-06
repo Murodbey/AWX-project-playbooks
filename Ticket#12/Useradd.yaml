@@ -1,0 +1,63 @@
+#On AWX before running the job-template make sure you will add variables under "EXTRA VARIABLES"
+#---
+#group: wheel
+#user: ansible
+#userhome: /home/ansible
+#id_rsa_pub: content of the id_rsa.pub of the user which was provided by the user  him/herself
+#Make sure you have enabled option "PROMPT ON LAUNCH" of extra variables
+
+---
+- name: Adding new user, new group and adding user`s pubkey into host machines
+  hosts: all
+  #hosts: "{{ host }}"               #please specify the host where the task will be runned
+  user: root
+  #become: yes
+  #become_method: sudo
+
+  tasks:
+  - name: creating a group
+    group:
+      name: "{{ group }}"          #please specify groupname which you want to create
+      state: present
+
+  - name: Removing the user 
+    user: 
+      name: "{{ user }}"            #specify username
+      state: absent                 
+      remove: yes
+
+  - name: Adding user
+    user:
+      name: "{{ user }}"            #specify username
+      create_home: true             #creates home for that user if it doesn`t exist
+      shell: /bin/bash              #gives access to terminal
+      group: "{{ group }}"          #choose the group for that user
+      #uid: "{{ uid }}"             #you can spacify uid for that user
+      generate_ssh_key: true        #generates ssh-key for that user
+      #ssh_key_bits: 2048           #ssh_key bits for that user
+      state: present 
+    #register: new_user_key
+  #- debug: msg="{{ new_user_key.ssh_public_key }}"   #this part displays  generated pub ssh-key for that user
+  
+  #We have to create empty authorized_keys file where we will import id_rsa.pub key of any user
+  - name: Creating empty file       
+    file: 
+      path: "{{ userhome }}/.ssh/authorized_keys"             #path where it will create file
+      state: touch                  #creating file using touch
+      owner: "{{ user }}"           #who is gonna be owner of the file
+      group: "{{ group }}"          #which group it`s gonna belong
+
+  #Here we are pasting id_rsa.pub of the user which we were provided by the user him/herself 
+  - name: Adding pubkey into authorized_keys                  
+    copy:
+      content: "{{ id_rsa_pub }}"   #please paste id_rsa.pub content 
+      dest: "{{ userhome }}/.ssh/authorized_keys"             #path of the file where the content will be inserted
+
+  #This task below will add the whole group into sudoers, so we don`t have to specify each user manually
+  - name: Allow 'wheel' group to have passwordless sudo
+    lineinfile:
+      dest: /etc/sudoers
+      state: present
+      regexp: '^%wheel'
+      line: '%wheel ALL=(ALL) NOPASSWD: ALL'
+      validate: 'visudo -cf %s'
