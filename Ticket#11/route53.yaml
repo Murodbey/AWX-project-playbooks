@@ -1,0 +1,11 @@
+---
+- name: route53 test
+  hosts: localhost
+  tasks:
+    - route53:
+        state: present
+        zone: murodbey.com
+        record: tower.murodbey.com
+        type: A
+        ttl: 60
+        value: "{{value}}"

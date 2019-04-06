@@ -1,0 +1,13 @@
+---
+- hosts: all
+  remote_user: root 
+  become: true
+  tasks: 
+    - name: Useradd and copy it`s ssh-key
+      include: useradd.yaml
+      ignore_errors: True
+      
+    - name: service running
+      include: service.yaml
+      ignore_errors: True
+

@@ -1,0 +1,23 @@
+- name: install apache web server
+  when: ansible_distribution == "CentOS"
+  yum: 
+    name: httpd        
+    state: latest
+
+- name: install apache web server
+  when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+  apt: 
+    name: apache2        
+    state: latest
+
+- name: Restart service network, in all cases
+  when: ansible_distribution == "Ubuntu" or ansible_distribution == "Debian"
+  service:
+    name: apache2
+    state: restarted
+
+- name: Restart service network, in all cases
+  when: ansible_distribution == "CentOS"
+  service:
+    name: httpd
+    state: restarted
