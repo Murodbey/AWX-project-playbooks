@@ -1,0 +1,31 @@
+---
+  - name: Provision EC2 Instance
+    hosts: localhost
+    tasks:
+      - name: EC2 Security Group
+        ec2_group:
+          name: ansible-tower
+          description: ansible-tower security group
+          vpc_id: "{{vpc_id}}"
+          region: "{{vpc_region}}"
+          rules:
+            - proto: tcp
+              ports:
+              - 22
+              - 80
+              - 3389
+              cidr_ip: 0.0.0.0/0
+
+      - name: Launch Instance 
+        ec2:
+          aws_region: "{{region}}"
+          image: "{{ami}}"
+          instance_type: "{{type}}"
+          instance_tags:
+            Name: "{{name}}"
+          count: 1
+          wait: yes
+          vpc_subnet_id: "{{subnet_id}}"
+          assign_public_ip: yes
+          group: ansible-tower
+          key_name: "{{pub_key}}"
