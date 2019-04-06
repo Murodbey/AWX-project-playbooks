@@ -18,23 +18,23 @@ Find out more about Tower features and how to download it on the Ansible Tower w
 ## Creating and Configuring machine on AWS 
 
 1. First you need to create Centos machine. You can find ready Centos ami instance from aws marketplace.
-[![](https://github.com/Murodbey/Ansible-Tower-Installation/blob/master/pictures/aws-marketplace.PNG)]
+[![](https://github.com/Murodbey/AWX-project/blob/master/AWX-Tower-installation/pictures/aws-marketplace.PNG)]
 
 2. Once you chose Centos7, you will be required to choose instance type. For Ansible-Tower you will need at least t2.medium instance. 
 
-[![](https://github.com/Murodbey/Ansible-Tower-Installation/blob/master/pictures/t2.medium.PNG)]
+[![](https://github.com/Murodbey/AWX-project/blob/master/AWX-Tower-installation/pictures/t2.medium.PNG)]
 
 3. To access your AWX on the browser, you will need to open port 80 in the security group configuration. You can configure it before launching instance. You may want to choose existing Security Group or create new one.
 
-[![](https://github.com/Murodbey/Ansible-Tower-Installation/blob/master/pictures/SecurityGroup.PNG)]
+[![](https://github.com/Murodbey/AWX-project/blob/master/AWX-Tower-installation/pictures/SecurityGroup.PNG)]
 
 4. Before launching instance you will need to create new key or use existing key. Make sure to download the key. Otherwise you won`t be able to ssh into your machine.
 
-[![](https://github.com/Murodbey/Ansible-Tower-Installation/blob/master/pictures/Key-pair.PNG)]
+[![](https://github.com/Murodbey/AWX-project/blob/master/AWX-Tower-installation/pictures/Key-pair.PNG)]
 
 5. Once the instance is created, you need to attach IAM role with full Admin access to that instance.
 
-[![](https://github.com/Murodbey/Ansible-Tower-Installation/blob/master/pictures/attaching%20iam%20role.PNG)]
+[![](https://github.com/Murodbey/AWX-project/blob/master/AWX-Tower-installation/pictures/attaching%20iam%20role.PNG)]
 
 6. To ssh into machine run this command(make sure to use "centos" user):
 
@@ -42,7 +42,7 @@ Find out more about Tower features and how to download it on the Ansible Tower w
 cd ~/Downloads
 ssh -i Ansible-tower.pem centos@IP
 ```
-[![](https://github.com/Murodbey/Ansible-Tower-Installation/blob/master/pictures/ssh%20into%20machine.PNG)]
+[![](https://github.com/Murodbey/AWX-project/blob/master/AWX-Tower-installation/pictures/ssh%20into%20machine.PNG)]
 
 
 ## AWX Installation
@@ -79,11 +79,11 @@ ansible-playbook -i inventory install.yml -vv
 
 docker container ls
 ```
-[![](https://github.com/Murodbey/Ansible-Tower-Installation/blob/master/pictures/docker%20container%20ls.PNG)]
+[![](https://github.com/Murodbey/AWX-project/blob/master/AWX-Tower-installation/pictures/docker%20container%20ls.PNG)]
 
 2. Once installation is completed, get the public IP of your instance and paste it to the browser. You will be able to see your AWX login page on the browser
 
-[![](https://github.com/Murodbey/Ansible-Tower-Installation/blob/master/pictures/awx%20login%20page.PNG)]
+[![](https://github.com/Murodbey/AWX-project/blob/master/AWX-Tower-installation/pictures/awx%20login%20page.PNG)]
 
 3. Default Login and Password for AWX
 
