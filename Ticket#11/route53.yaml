@@ -1,11 +1,17 @@
+# Please specify the following variables when prompted while launching the template   
+# state: present | absent | get | create | delete 
+# zone: The DNS zone to modify, e.g. example.com
+# record: The full DNS record to create or delete e.g. tower.example.com
+# value: The new value when creating a DNS record
 ---
-- name: route53 test
+- name: add or delete entries in Amazons Route53 DNS service
   hosts: localhost
-  tasks:
-    - route53:
-        state: present
-        zone: murodbey.com
-        record: tower.murodbey.com
+  tasks: 
+    - name: add or delete entries in Amazons Route53 DNS service
+      route53:
+        state: "{{state}}"
+        zone: "{{zone}}"
+        record: "{{record}}"
         type: A
-        ttl: 60
+        ttl: 300
         value: "{{value}}"

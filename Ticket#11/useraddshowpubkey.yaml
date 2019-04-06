@@ -1,0 +1,14 @@
+# Please specify the following variables when prompted while launching the template   
+# user: username
+---
+- name: add user and generate key, print public key
+  hosts: all
+  become: yes
+  become_method: sudo
+  tasks: 
+    - name: add user and generate key, print public key 
+      user:
+        name: "{{user}}"
+        generate_ssh_key: yes
+      register: new_user
+    - debug: msg="{{ new_user.ssh_public_key }}"
