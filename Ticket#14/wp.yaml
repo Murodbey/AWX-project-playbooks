@@ -1,0 +1,17 @@
+--- #t will ask to put input for e-link
+  - name: unziping wordpress 
+    hosts: "{{ host_IP }}"
+    become: yes
+    become_method: sudo
+    tasks:
+      - name: install wp from e-link
+        get_url: 
+          url: "{{ url_input }}"
+          #url: https://wordpress.org/latest.tar.gz)
+          dest: /tmp
+      - name: unzip the file
+        unarchive:
+          src: /tmp/wordpress-5.1.1.tar.gz
+          #format: gzip
+          dest: /tmp/
+          remote_src: True
