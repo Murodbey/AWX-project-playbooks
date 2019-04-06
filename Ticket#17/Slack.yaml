@@ -1,0 +1,27 @@
+---
+- name: slack
+  hosts: all
+  tasks:
+    - name: check for upfates RedHat OS Family
+      when: ansible_os_family == "RedHat"
+      shell: yum check-update | grep ^kernel.x | cat
+      args:
+        warn: False
+      register: redhat
+    - set_fact: update="{{redhat}}"
+      when: redhat.changed
+
+    - name: check for updates on Debian OS Family
+      when: ansible_os_family == "Debian"
+      shell: apt list --upgradable | grep ^linux-image | cat
+      args:
+        warn: False
+      register: debian
+    - set_fact: update="{{debian}}"
+      when: debian.changed
+    
+    - name: Send notification message via Slack
+      when: update.stdout != ""
+      slack:
+        token: THQ1XJR54/BHDV0BYEM/iy8q2Vf2qsjRAcxrcLlZIwj3
+        msg: "update kernel on {{inventory_hostname}}"
