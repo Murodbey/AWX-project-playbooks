@@ -1,0 +1,14 @@
+---
+- hosts: all
+  become: true
+  become_method: sudo 
+  tasks:
+  - name: Install packages
+    apt: 
+      name: "{{ item }}" 
+      state: latest
+    with_items:
+     - python-pip
+     - git
+     - apache2
+    when: ansible_distribution == 'Ubuntu' 
