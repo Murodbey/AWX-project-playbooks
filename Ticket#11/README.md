@@ -1,8 +1,8 @@
-#Ticket#11
+# Ticket#11
 
-##AWX
+## AWX
 
-###Please create the follow playbooks: 
+### Please create the follow playbooks: 
 - Playbook that starts and stops service
 - Add User ssh keys to remote systems
 - Create playbook for adding a user and getting it's ssh key to authorized keys of another systems
