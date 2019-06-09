@@ -30,26 +30,28 @@
         service:
           name: filebeat
           enabled: yes
-      - name: Short form task (in ansible 2+) necessitates backslash-escaped sequences
+      - name: Line change
         replace: 
           path: /etc/filebeat/filebeat.yml 
           regexp: 'output.elasticsearch:' 
           replace: '#output.elasticsearch:'
-      - name: Short form task (in ansible 2+) necessitates backslash-escaped sequences
+      - name: Line change
         replace: 
           path: /etc/filebeat/filebeat.yml 
           regexp: '\ \ hosts: \["localhost:9200"\]' 
           replace: '  #hosts: ["localhost:9200"]'
-      - name: Short form task (in ansible 2+) necessitates backslash-escaped sequences
+      - name: Line change
         replace: 
           path: /etc/filebeat/filebeat.yml 
           regexp: '#output.logstash:' 
           replace: 'output.logstash:'
-      - name: Short form task (in ansible 2+) necessitates backslash-escaped sequences
+      - name: Line change
         replace: 
           path: /etc/filebeat/filebeat.yml 
           regexp: '\ \ #hosts: \["localhost:5044"\]' 
           replace: '  hosts: ["localhost:5044"]'
+      - name: filebeat modules
+        shell: "sudo filebeat modules enable system"
       
   handlers:
     - name: FILEBEAT_CENTOS_7
