@@ -15,7 +15,7 @@
         shell: "rpm -vU filebeat-7.1.1-x86_64.rpm"
         notify: FILEBEAT_CENTOS_7
         # ignore_errors: true
-      when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
+      # when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
 
   handlers:
     - name: FILEBEAT_CENTOS_7
