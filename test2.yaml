@@ -39,7 +39,7 @@
         replace: 
           path: /etc/filebeat/filebeat.yml 
           regexp: '\ \ hosts: \["localhost:9200"\]' 
-          replace: '\ \ #hosts: \["localhost:9200"\]'
+          replace: '#hosts: ["localhost:9200"]'
       - name: Short form task (in ansible 2+) necessitates backslash-escaped sequences
         replace: 
           path: /etc/filebeat/filebeat.yml 
@@ -48,7 +48,7 @@
       - name: Short form task (in ansible 2+) necessitates backslash-escaped sequences
         replace: 
           path: /etc/filebeat/filebeat.yml 
-          regexp: '#hosts: ["localhost:5044"]' 
+          regexp: '\ \ #hosts: \["localhost:5044"\]' 
           replace: 'hosts: ["localhost:5044"]'
       
   handlers:
