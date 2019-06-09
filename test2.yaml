@@ -30,6 +30,28 @@
         service:
           name: filebeat
           enabled: yes
+      - name: Add a line to a file if the file does not exist, without passing regexp
+        lineinfile:
+          path: /etc/filebeat/filebeat.yml
+          line: /output.elasticsearch/#output.elasticsearch/g
+          create: yes
+      - name: Add a line to a file if the file does not exist, without passing regexp
+        lineinfile:
+          path: /etc/filebeat/filebeat.yml
+          line: "/9200/ c \\ \\ #hosts: [\"localhost:9200\"]"
+          create: yes
+      - name: Add a line to a file if the file does not exist, without passing regexp
+        lineinfile:
+          path: /etc/filebeat/filebeat.yml
+          line: "#output.logstash/output.logstash/g"
+          create: yes
+      - name: Add a line to a file if the file does not exist, without passing regexp
+        lineinfile:
+          path: /etc/filebeat/filebeat.yml
+          line: "/5044/ c \\ \\ hosts: [\"localhost:5044\"]"
+          create: yes
+      
+
 
   handlers:
     - name: FILEBEAT_CENTOS_7
