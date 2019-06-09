@@ -1,0 +1,18 @@
+---
+- name: Install filebeat
+  hosts: localhost
+  become: yes
+  become_user: root
+  tasks:
+    - name: install epel-release
+      yum:
+         name: epel-release
+         state: latest
+    - block:
+      - name: Install filebeat repo on centos 7
+        shell: "curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.1.1-x86_64.rpm"
+      - name: Install from rpm
+        shell: "rpm -vU filebeat-7.1.1-x86_64.rpm"
+        notify: FILEBEAT_CENTOS_7
+        ignore_errors: true
+      when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
