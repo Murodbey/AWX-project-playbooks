@@ -35,25 +35,22 @@
           path: /etc/filebeat/filebeat.yml 
           regexp: 'output.elasticsearch:' 
           replace: '#output.elasticsearch:'
-
-      # - name: Add a line to a file if the file does not exist, without passing regexp
-      #   lineinfile:
-      #     path: /etc/filebeat/filebeat.yml
-      #     line: "/9200/ c \\ \\ #hosts: [\"localhost:9200\"]"
-      #     create: yes
-      # - name: Add a line to a file if the file does not exist, without passing regexp
-      #   lineinfile:
-      #     path: /etc/filebeat/filebeat.yml
-      #     line: "#output.logstash/output.logstash/g"
-      #     create: yes
-      # - name: Add a line to a file if the file does not exist, without passing regexp
-      #   lineinfile:
-      #     path: /etc/filebeat/filebeat.yml
-      #     line: "/5044/ c \\ \\ hosts: [\"localhost:5044\"]"
-      #     create: yes
+      - name: Short form task (in ansible 2+) necessitates backslash-escaped sequences
+        replace: 
+          path: /etc/filebeat/filebeat.yml 
+          regexp: 'hosts: ["localhost:9200"]' 
+          replace: '#hosts: ["localhost:9200"]'
+      - name: Short form task (in ansible 2+) necessitates backslash-escaped sequences
+        replace: 
+          path: /etc/filebeat/filebeat.yml 
+          regexp: '#output.logstash:' 
+          replace: 'output.logstash:'
+      - name: Short form task (in ansible 2+) necessitates backslash-escaped sequences
+        replace: 
+          path: /etc/filebeat/filebeat.yml 
+          regexp: '#hosts: ["localhost:5044"]' 
+          replace: 'hosts: ["localhost:5044"]'
       
-
-
   handlers:
     - name: FILEBEAT_CENTOS_7
       systemd:
