@@ -29,7 +29,7 @@
       - name: Enable filebeat
         service:
           name: filebeat
-          state: enabled
+          enabled: yes
 
   handlers:
     - name: FILEBEAT_CENTOS_7
