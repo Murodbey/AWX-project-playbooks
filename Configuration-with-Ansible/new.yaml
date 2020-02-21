@@ -28,6 +28,8 @@
           - python-pip
         state: latest
     
+    - name: Install boto
+      command: pip install boto
     
     - name: Restart service httpd and enable it
       service:
