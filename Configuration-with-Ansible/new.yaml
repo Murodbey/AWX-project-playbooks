@@ -24,8 +24,7 @@
           - phpmyadmin
           - wget
           - unzip
-          - python 
-          - python-dev 
+          - python   
           - python-pip
         state: latest
     
