@@ -6,18 +6,26 @@
   connection: ssh
   ignore_errors: false
   tasks:
-    - name: Install telnet
+    - name: Install packages
       package:
         name:
-          - apache2
-          - mysql-server
-          - php7.2-mysql
-          - php7.2
-          - libapache2-mod-php7.2
-          - python-mysqldb
+          - epel-release
+          - httpd
+          - mariadb-server
+          - mariadb
+          - php
+          - php-common
+          - php-mysql
+          - php-gd
+          - php-xml
+          - php-mbstring
+          - php-mcrypt
+          - php-xmlrpc
+          - phpmyadmin
           - wget
           - unzip
         state: latest
+        ignore_errors: yes
 
     - name: install wp from e-link
       get_url: 
