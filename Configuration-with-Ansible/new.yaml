@@ -24,12 +24,33 @@
           - phpmyadmin
           - wget
           - unzip
+          - python 
+          - python-dev 
+          - python-pip
         state: latest
+    
+    
+    - name: Restart service httpd and enable it
+      service:
+        name: httpd
+        state: restarted
+        enabled: yes
+      
+    - name: Start service mariadb, if not started
+      service:
+        name: mariadb
+        state: started
 
     - name: install wp from e-link
       get_url: 
         url: https://wordpress.org/latest.tar.gz)
         dest: /tmp
+    
+    - name: Create a directory if it does not exist
+      file:
+        path: /var/www/
+        state: directory
+        mode: '0755'
 
     - name: unzip the file
       unarchive:
@@ -65,6 +86,7 @@
         shell: /bin/bash              
         generate_ssh_key: true        
         state: present
+
     - name:    
       route53:
         state: present
