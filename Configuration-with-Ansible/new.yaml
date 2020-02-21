@@ -1,0 +1,68 @@
+---
+- name: Test playbook
+  hosts: 54.185.82.220              #host ipaddr        
+  become: true
+  become_method: sudo
+  connection: ssh
+  ignore_errors: false
+  tasks:
+    - name: Install telnet
+      package:
+        name:
+          - apache2
+          - mysql-server
+          - php7.2-mysql
+          - php7.2
+          - libapache2-mod-php7.2
+          - python-mysqldb
+          - wget
+          - unzip
+        state: latest
+
+    - name: install wp from e-link
+      get_url: 
+        url: https://wordpress.org/latest.tar.gz)
+        dest: /tmp
+
+    - name: unzip the file
+      unarchive:
+        src: /tmp/wordpress-5.3.2.tar.gz
+        dest: /var/www/
+        remote_src: True
+
+    - name: Adding user Bob
+      user:
+        name: Bob                     #specify username
+        create_home: true             #creates home for that user if it doesn`t exist
+        shell: /bin/bash              #gives access to terminal
+        generate_ssh_key: true        #generates ssh-key for that user
+        state: present 
+    - name: Adding user Ben
+      user:
+        name: Ben           
+        create_home: true             
+        shell: /bin/bash              
+        generate_ssh_key: true        
+        state: present 
+    - name: Adding user Lisa
+      user:
+        name: Lisa           
+        create_home: true             
+        shell: /bin/bash              
+        generate_ssh_key: true        
+        state: present
+    - name: Adding user Katty
+      user:
+        name: Katty           
+        create_home: true             
+        shell: /bin/bash              
+        generate_ssh_key: true        
+        state: present
+    - name:    
+      route53:
+        state: present
+        zone: murodbey.com
+        record: wordpress.murodbey.com
+        type: A
+        ttl: 300
+        value: 54.185.82.220
