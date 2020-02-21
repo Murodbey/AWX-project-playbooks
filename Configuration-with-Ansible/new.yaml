@@ -4,7 +4,7 @@
   become: true
   become_method: sudo
   connection: ssh
-  ignore_errors: false
+  ignore_errors: true
   tasks:
     - name: Install packages
       package:
@@ -25,7 +25,6 @@
           - wget
           - unzip
         state: latest
-        ignore_errors: yes
 
     - name: install wp from e-link
       get_url: 
