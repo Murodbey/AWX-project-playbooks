@@ -30,12 +30,6 @@
     
     - name: Install boto
       command: pip install boto
-    
-    - name: Restart service httpd and enable it
-      service:
-        name: httpd
-        state: restarted
-        enabled: yes
       
     - name: Start service mariadb, if not started
       service:
@@ -44,7 +38,7 @@
     
     - name: config manager enabled
       shell: "sudo yum-config-manager --enable remi-php72"
-      
+
     - name : update httpd PHP
       shell: "sudo yum install httpd php php-common php-opcache php-mcrypt php-cli php-gd php-curl php-mysql mysql -y" 
 
@@ -67,6 +61,12 @@
 
     - name: Move files to html folder
       shell: "mv /var/www/html/wordpress/* /var/www/html"
+
+    - name: Restart service httpd and enable it
+      service:
+        name: httpd
+        state: restarted
+        enabled: yes
 
     - name: Adding user Bob
       user:
