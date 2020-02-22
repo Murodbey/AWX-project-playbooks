@@ -41,6 +41,12 @@
       service:
         name: mariadb
         state: started
+    
+    - name: config manager enabled
+      shell: "sudo yum-config-manager --enable remi-php72"
+      
+    - name : update httpd PHP
+      shell: "sudo yum install httpd php php-common php-opcache php-mcrypt php-cli php-gd php-curl php-mysql mysql -y" 
 
     - name: install wp from e-link
       get_url: 
