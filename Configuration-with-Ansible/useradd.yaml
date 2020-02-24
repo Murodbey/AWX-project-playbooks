@@ -4,11 +4,11 @@
   become: yes
   become_method: sudo
   tasks:
-    - name: add or removes an SSH authorized key
-      authorized_key:
-        user: "{{ username }}"
-        state: "{{ state }}"  #present or absent
-        key: "{{ new_user_key }}" #pub key goes to this var
-        dest: "/home/ansible/.ssh/authorized_keys"
-        var:
-        new_user_key: "{{ files | map(attribute='key') | list }}"
+  - name: add or removes an SSH authorized key
+    authorized_key:
+      user: "{{ username }}"
+      state: "{{ state }}"  #present or absent
+      key: "{{ new_user_key }}" #pub key goes to this var
+      dest: "/home/ansible/.ssh/authorized_keys"
+    var:
+      new_user_key: "{{ files | map(attribute='key') | list }}"
