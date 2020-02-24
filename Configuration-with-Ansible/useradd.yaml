@@ -14,6 +14,6 @@
       user: "{{ username }}"
       state: "{{ state }}"  #present or absent
       key: "{{ new_user_key }}" #pub key goes to this var
-      path: "/home/ansible/.ssh/authorized_keys"
+      path: "/home/{{username}}/.ssh/authorized_keys"
     # var:
     #   new_user_key: "{{ files | map(attribute='key') | list }}"
