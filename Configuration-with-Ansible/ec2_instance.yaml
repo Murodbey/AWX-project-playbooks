@@ -1,5 +1,5 @@
 ---
-- name: Create a sandbox instance
+- name: Create ec2-instance
   hosts: localhost
   gather_facts: False
   tasks:
