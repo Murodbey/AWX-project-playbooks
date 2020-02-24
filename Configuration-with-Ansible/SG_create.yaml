@@ -1,6 +1,6 @@
 ---
 - name: sg-provision
-  hosts: 
+  hosts: localhost
   gather_facts: false
   remote_user: root
   tasks:
