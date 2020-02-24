@@ -6,7 +6,7 @@
   tasks:
     - name: Create a security group
       ec2_group:
-        name: "{{ security_group }}"
+        name: "{{ sg_name }}"
         description: ansible security group
         region: "{{ region }}"
         rules:
