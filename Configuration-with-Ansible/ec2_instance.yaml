@@ -1,0 +1,44 @@
+---
+- name: Create a sandbox instance
+  hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: Launch instance
+      ec2:
+         key_name: "{{ keypair }}"
+         group: "{{ security_group }}"
+         instance_type: "{{ instance_type }}"
+         image: "{{ image }}"
+         wait: true
+         region: "{{ region }}"
+         vpc_subnet_id: "{{ vpc_subnet_id }}"
+         assign_public_ip: yes
+      register: ec2
+
+# ---
+# - name: Create a sandbox instance
+#   hosts: localhost
+#   gather_facts: False
+#   vars:
+#     keypair: ansible
+#     security_group: ansible-sg
+#     image: 
+#       - 'ami-0e8c04af2729ff1bb'  # us-west-2
+#       - 'ami-099a8245f5daa82bf'  # eu-west-1
+#       - 'ami-0a887e401f7654935'  # us-east-1
+#     vpc_subnet_id:
+#       - 'subnet-008608e4efd380a35'  # us-east-1
+#       - 'subnet-01913d5d3ef3dfb1c'  # us-west-2
+#       - 'subnet-0820acadf9f3e21e8'   # eu-west-1
+#   tasks:
+#     - name: Launch instance
+#       ec2:
+#          key_name: "{{ keypair }}"
+#          group: "{{ security_group }}"
+#          instance_type: "{{ instance_type }}"
+#          image: "{{ image }}"
+#          wait: true
+#          region: "{{ region }}"
+#          vpc_subnet_id: subnet-29e63245
+#          assign_public_ip: yes
+#       register: ec2
