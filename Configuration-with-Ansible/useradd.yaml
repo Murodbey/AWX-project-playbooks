@@ -4,6 +4,11 @@
   become: yes
   become_method: sudo
   tasks:
+  - name: Add the user 
+    user:
+      name: "{{ username }}"
+      create_home: yes
+
   - name: add or removes an SSH authorized key
     authorized_key:
       user: "{{ username }}"
