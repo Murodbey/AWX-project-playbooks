@@ -2,8 +2,8 @@
 - name: VPC and subnet create
   hosts: localhost
   tasks:
-    - name: Create VPC and Subnet
-      ec2_vpc:
+  - name: Create VPC and Subnet
+    ec2_vpc:
         state: present
         region: "{{ region }}"
         cidr_block: 10.0.0.0/16
@@ -26,7 +26,7 @@
         internet_gateway: yes
         # resource_tags:
         #   Name: "Test VPC"
-      register: vpc
+    register: vpc
 
 
 # - ec2_vpc:
