@@ -8,7 +8,7 @@
         cidr_block: "{{vpc_cidr}}"
         region: "{{region}}"
         tags:
-          environment: "{{tag}}"
+          environment: "{{tag-env}}"
         subnets:
         - cidr: 10.0.1.0/24
           resource_tags: "{{ tag-env }}"
