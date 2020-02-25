@@ -25,7 +25,7 @@
     internet_gateway: yes
         # resource_tags:
         #   Name: "Test VPC"
-  register: vpc
+  # register: vpc
 
 
 # - ec2_vpc:
