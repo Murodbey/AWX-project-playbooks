@@ -1,7 +1,7 @@
 ---
 - name: Create VPC and Subnet
   hosts: localhost
-  ec2_vpc_net:
+  ec2_vpc:
     name: vpc-ansible
     state: present
     region: "{{ region }}"
