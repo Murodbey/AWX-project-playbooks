@@ -5,16 +5,16 @@
     - name: Create VPC and Subnet
       ec2_vpc:
         state: present
-        region: "{{region}}"
+        region: "{{ region }}"
         cidr_block: 10.0.0.0/16
-        resource_tags: "{{tag-env}}"
+        resource_tags: "{{ tag-env }}"
         subnets:
           - cidr: 10.0.1.0/24
-            resource_tags: "{{tag-env}}"
+            resource_tags: "{{ tag-env }}"
           - cidr: 10.0.2.0/24
-            resource_tags: "{{tag-env}}"
+            resource_tags: "{{ tag-env }}"
           - cidr: 10.0.3.0/24
-            resource_tags: "{{tag-env}}"
+            resource_tags: "{{ tag-env }}"
         route_tables:
           - subnets:
             - 10.0.2.0/24
