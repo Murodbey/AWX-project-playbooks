@@ -3,7 +3,7 @@
   hosts: localhost
   tasks:
   - name: Create VPC and Subnet
-    ec2_vpc:
+    ec2_vpc_net:
         state: present
         region: "{{ region }}"
         cidr_block: 10.0.0.0/16
