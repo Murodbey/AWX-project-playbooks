@@ -1,13 +1,36 @@
 ---
-- name: create a VPC with dedicated tenancy and a couple of tags
-  ec2_vpc_net:
-    name: Module_dev2
-    cidr_block: 10.0.0.0/16
-    region: "{{region}}"
-    tags:
-      module: "{{tags}}"
-      # this: works
-    tenancy: dedicated
+- name: VPC provisioner
+  hosts: localhost
+  tasks:
+    - name: VPC and subnets
+      ec2_vpc_net:
+        name: "{{vpc_name}}"
+        cidr_block: "{{vpc_cidr}}"
+        region: "{{region}}"
+        tags:
+          Class: Ansible
+          Task: VPC
+        subnets:
+        - cidr: 10.0.1.0/24
+          resource_tags: "{{ tag-env }}"
+        - cidr: 10.0.2.0/24
+          resource_tags: "{{ tag-env }}"
+        - cidr: 10.0.3.0/24
+          resource_tags: "{{ tag-env }}"
+        
+
+
+
+# - name: create a VPC with dedicated tenancy and a couple of tags
+#   ec2_vpc_net:
+#     name: Module_dev2
+#     cidr_block: 10.0.0.0/16
+#     region: "{{region}}"
+#     tags:
+#       module: "{{tags}}"
+#       # this: works
+#     tenancy: dedicated
+
 
 # - name: Create VPC and Subnet
 #   hosts: localhost
