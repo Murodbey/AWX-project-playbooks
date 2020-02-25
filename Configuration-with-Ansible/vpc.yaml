@@ -9,13 +9,13 @@
         region: "{{region}}"
         tags:
           environment: "{{tag-env}}"
-        subnets:
-        - cidr: 10.0.1.0/24
-          resource_tags: "{{ tag-env }}"
-        - cidr: 10.0.2.0/24
-          resource_tags: "{{ tag-env }}"
-        - cidr: 10.0.3.0/24
-          resource_tags: "{{ tag-env }}"
+        # subnets:
+        # - cidr: 10.0.1.0/24
+        #   resource_tags: "{{ tag-env }}"
+        # - cidr: 10.0.2.0/24
+        #   resource_tags: "{{ tag-env }}"
+        # - cidr: 10.0.3.0/24
+        #   resource_tags: "{{ tag-env }}"
         
 
 
