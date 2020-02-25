@@ -1,33 +1,31 @@
 ---
-- name: VPC and subnet create
+- name: Create VPC and Subnet
   hosts: localhost
-  tasks:
-  - name: Create VPC and Subnet
-    ec2_vpc_net:
-      name: vpc-ansible
-      state: present
-      region: "{{ region }}"
-      cidr_block: 10.0.0.0/16
-      tags: "{{ tag-env }}"
-      subnets:
-        - cidr: 10.0.1.0/24
-          resource_tags: "{{ tag-env }}"
-        - cidr: 10.0.2.0/24
-          resource_tags: "{{ tag-env }}"
-        - cidr: 10.0.3.0/24
-          resource_tags: "{{ tag-env }}"
-      route_tables:
-        - subnets:
-          - 10.0.2.0/24
-          - 10.0.3.0/24
-          routes:
-            - dest: 0.0.0.0/0
-              gw: igw
-      wait: yes
-      internet_gateway: yes
+  ec2_vpc_net:
+    name: vpc-ansible
+    state: present
+    region: "{{ region }}"
+    cidr_block: 10.0.0.0/16
+    tags: "{{ tag-env }}"
+    subnets:
+      - cidr: 10.0.1.0/24
+        resource_tags: "{{ tag-env }}"
+      - cidr: 10.0.2.0/24
+        resource_tags: "{{ tag-env }}"
+      - cidr: 10.0.3.0/24
+        resource_tags: "{{ tag-env }}"
+    route_tables:
+      - subnets:
+        - 10.0.2.0/24
+        - 10.0.3.0/24
+        routes:
+          - dest: 0.0.0.0/0
+            gw: igw
+    wait: yes
+    internet_gateway: yes
         # resource_tags:
         #   Name: "Test VPC"
-    register: vpc
+  register: vpc
 
 
 # - ec2_vpc:
