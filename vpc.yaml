@@ -1,0 +1,57 @@
+---
+- ec2_vpc:
+    state: present
+    cidr_block: 10.0.0.0/16
+    resource_tags: { "Environment" : "{{tag-env}}" }
+    subnets:
+      - cidr: 10.0.1.0/24
+        # az: us-west-2c
+        resource_tags: { "Environment" : "{{tag-env}}" }
+      - cidr: 10.0.2.0/24
+        # az: us-west-2b
+        resource_tags: { "Environment" : "{{tag-env}}" }
+      - cidr: 10.0.3.0/24
+        # az: us-west-2a
+        resource_tags: { "Environment" : "{{tag-env}}" }
+    internet_gateway: True
+    route_tables:
+      - subnets:
+          - 10.0.2.0/24
+          - 10.0.3.0/24
+        routes:
+          - dest: 0.0.0.0/0
+            gw: igw
+          - subnets:
+              - 10.0.1.0/24
+            routes:
+              - dest: 0.0.0.0/0
+                gw: igw
+        region: "{{region}}"
+    register: vpc
+
+
+
+
+
+# - name: To set up internet gateway
+#   hosts: all
+#   tasks:
+#     - name: Create VPC and Subnet
+#       ec2_vpc:
+#         state: present
+#         region: "{{region}}"
+#         cidr_block: 10.0.0.0/16
+#         subnets:
+#           - cidr: 10.0.0.0/16
+#             resource_tags: {"Name":"Test Subnet"}
+#         route_tables:
+#           - subnets:
+#             - 20.0.0.0/16
+#             routes:
+#               - dest: 0.0.0.0/0
+#                 gw: igw
+#         wait: yes
+#         internet_gateway: yes
+#         resource_tags:
+#           Name: "Test VPC"
+#       register: vpc
