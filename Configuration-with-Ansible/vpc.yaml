@@ -8,8 +8,7 @@
         cidr_block: "{{vpc_cidr}}"
         region: "{{region}}"
         tags:
-          Class: Ansible
-          Task: VPC
+          environment: "{{tag}}"
         subnets:
         - cidr: 10.0.1.0/24
           resource_tags: "{{ tag-env }}"
