@@ -1,7 +1,7 @@
 ---
 - name: Create VPC and Subnet
   hosts: localhost
-  ec2_vpc:
+  ec2_vpc_net:
     name: vpc-ansible
     state: present
     region: "{{ region }}"
@@ -23,6 +23,7 @@
             gw: igw
     wait: yes
     internet_gateway: yes
+    tenancy: dedicated
         # resource_tags:
         #   Name: "Test VPC"
   # register: vpc
