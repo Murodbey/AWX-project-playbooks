@@ -1,35 +1,30 @@
 ---
-- name: Install filebeat
-  hosts: all
-  become: yes
-  become_user: root
-  tasks:
-    - block:
-      - name: Install filebeat repo on centos 6
-        package: 
-          name: "https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.1.1-x86_64.rpm"
-          state: latest
-        notify: FILEBEAT_CENTOS_6 
-      when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "6"
-      ignore_errors: true
-      
-
-
-    - block:
-      - name: Install filebeat repo on centos 7
-        package: 
-          name: "https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.1.1-x86_64.rpm"
-          state: latest
-        notify: FILEBEAT_CENTOS_7
-      when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7" 
-      ignore_errors: true
-    
-  handlers:
-    - name: FILEBEAT_CENTOS_6
-      service:
-        name: filebeat
-        state: restarted
-    - name: FILEBEAT_CENTOS_7
-      systemd:
-        name: filebeat
-        state: restarted
+- ec2_vpc:
+    state: present
+    cidr_block: 10.0.0.0/16
+    resource_tags: { "Environment" : "{{tag-env}}" }
+    subnets:
+      - cidr: 10.0.1.0/24
+        # az: us-west-2c
+        resource_tags: { "Environment" : "{{tag-env}}" }
+      - cidr: 10.0.2.0/24
+        # az: us-west-2b
+        resource_tags: { "Environment" : "{{tag-env}}" }
+      - cidr: 10.0.3.0/24
+        # az: us-west-2a
+        resource_tags: { "Environment" : "{{tag-env}}" }
+    internet_gateway: True
+    route_tables:
+      - subnets:
+          - 10.0.2.0/24
+          - 10.0.3.0/24
+        routes:
+          - dest: 0.0.0.0/0
+            gw: igw
+          - subnets:
+              - 10.0.1.0/24
+            routes:
+              - dest: 0.0.0.0/0
+                gw: igw
+        region: "{{region}}"
+    register: vpc
