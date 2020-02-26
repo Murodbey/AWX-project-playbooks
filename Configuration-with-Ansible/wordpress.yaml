@@ -54,12 +54,22 @@
       become: yes
       become_method: sudo
 
-    # - name:    
-    #   route53:
-    #     state: create
-    #     zone: murodbey.com
-    #     record: wordpress.murodbey.com
-    #     type: A
-    #     ttl: 300
-    #     value: 54.185.82.220
+
+
+# ---
+# - name: Test playbook
+#   hosts: localhost        
+#   become: true
+#   become_method: sudo
+#   connection: ssh
+#   ignore_errors: true
+#   tasks:
+#     - name:    
+#       route53:
+#         state: create
+#         zone: murodbey.com
+#         record: wordpress.murodbey.com
+#         type: A
+#         ttl: 300
+#         value: 54.185.82.220
       
