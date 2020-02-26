@@ -1,107 +1,65 @@
 ---
 - name: Test playbook
-  hosts: 54.185.82.220              #host ipaddr        
+  hosts: "{{host_ip}}"              #host ipaddr        
   become: true
   become_method: sudo
   connection: ssh
   ignore_errors: true
   tasks:
-    - name: Install packages
+    - name: Install necessary packages
       package:
-        name:
-          - epel-release
-          - httpd
-          - mariadb-server
-          - mariadb
-          - php
-          - php-common
-          - php-mysql
-          - php-gd
-          - php-xml
-          - php-mbstring
-          - php-mcrypt
-          - php-xmlrpc
-          - phpmyadmin
-          - wget
-          - unzip
-          - python   
-          - python-pip
+        name: murodbey_wordpress
         state: latest
-    
-    - name: Install boto
-      command: pip install boto
-      
-    - name: Start service mariadb, if not started
-      service:
-        name: mariadb
-        state: started
-    
+      with_items:
+       - epel-release
+       - wget
+       - unzip
+       - mariadb-server
+      ignore_errors: true
+
+
+    - name: Install epel-release
+      shell: "sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y"
     - name: config manager enabled
       shell: "sudo yum-config-manager --enable remi-php72"
-
     - name : update httpd PHP
-      shell: "sudo yum install httpd php php-common php-opcache php-mcrypt php-cli php-gd php-curl php-mysql mysql -y" 
+      shell: "sudo yum install httpd php php-common php-opcache php-mcrypt php-cli php-gd php-curl php-mysql mysql -y"
+      ignore_errors: true
 
-    - name: install wp from e-link
-      get_url: 
-        url: https://wordpress.org/latest.tar.gz)
-        dest: /tmp
-    
-    - name: Create a directory if it does not exist
-      file:
-        path: /var/www/
-        state: directory
-        mode: '0755'
 
-    - name: unzip the file
+    - name: Download wordpress Package
+      get_url:
+        url: https://wordpress.org/wordpress-5.2.1.tar.gz
+        dest: /tmp/
+
+    - name: Unzip wordpres file
       unarchive:
-        src: /tmp/wordpress-5.3.2.tar.gz
-        dest: /var/www/html/
-        remote_src: True
+        src: "/tmp/wordpress-5.2.1.tar.gz"
+        dest: "/var/www/html"
+        remote_src: yes
+      become: yes
+      become_method: sudo
 
     - name: Move files to html folder
       shell: "mv /var/www/html/wordpress/* /var/www/html"
+      become: yes
+      become_method: sudo
+      ignore_errors: yes
 
-    - name: Restart service httpd and enable it
-      service:
+    - name: Restart httpd
+      systemd:
         name: httpd
         state: restarted
         enabled: yes
+      become: yes
+      become_method: sudo
 
-    - name: Adding user Bob
-      user:
-        name: Bob                     #specify username
-        create_home: true             #creates home for that user if it doesn`t exist
-        shell: /bin/bash              #gives access to terminal
-        generate_ssh_key: true        #generates ssh-key for that user
-        state: present 
-    - name: Adding user Ben
-      user:
-        name: Ben           
-        create_home: true             
-        shell: /bin/bash              
-        generate_ssh_key: true        
-        state: present 
-    - name: Adding user Lisa
-      user:
-        name: Lisa           
-        create_home: true             
-        shell: /bin/bash              
-        generate_ssh_key: true        
-        state: present
-    - name: Adding user Katty
-      user:
-        name: Katty           
-        create_home: true             
-        shell: /bin/bash              
-        generate_ssh_key: true        
-        state: present
-
-    - name:    
-      route53:
-        state: create
-        zone: murodbey.com
-        record: wordpress.murodbey.com
-        type: A
-        ttl: 300
-        value: 54.185.82.220
+    # - name:    
+    #   route53:
+    #     state: create
+    #     zone: murodbey.com
+    #     record: wordpress.murodbey.com
+    #     type: A
+    #     ttl: 300
+    #     value: 54.185.82.220
+      
