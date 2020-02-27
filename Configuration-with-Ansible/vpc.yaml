@@ -1,8 +1,8 @@
 ---
-- name: VPC provisioner
+- name: Playbook for VPC
   hosts: localhost
   tasks:
-    - name: VPC and subnets
+    - name: VPC 
       ec2_vpc_net:
         name: "{{vpc_name}}"
         cidr_block: "{{vpc_cidr}}"
@@ -10,112 +10,77 @@
         tags:
           Class: Ansible
           Task: VPC
-          # environment: "{{tag-env}}"
-        # subnets:
-        # - cidr: 10.0.1.0/24
-        #   resource_tags: "{{ tag-env }}"
-        # - cidr: 10.0.2.0/24
-        #   resource_tags: "{{ tag-env }}"
-        # - cidr: 10.0.3.0/24
-        #   resource_tags: "{{ tag-env }}"
-        
+
+- name: Playbook for Subnets
+  hosts: localhost
+  gather_facts: no
+  tasks:
+    - name: Collect VPC info
+      ec2_vpc_net_facts:
+        region: "{{region}}"
+        filters:
+          "tag:Task": VPC
+      register: VPC1
 
 
 
-# - name: create a VPC with dedicated tenancy and a couple of tags
-#   ec2_vpc_net:
-#     name: Module_dev2
-#     cidr_block: 10.0.0.0/16
-#     region: "{{region}}"
-#     tags:
-#       module: "{{tags}}"
-#       # this: works
-#     tenancy: dedicated
+    - name: Create Private Subnet 1
+      ec2_vpc_subnet:
+        state: present
+        vpc_id: "{{VPC1.vpcs[0].vpc_id}}"
+        region: "{{region}}"
+        cidr: "{{Private_cidr1}}"
+        resource_tags:
+          Name: Private Subnet1
+      register: private_subnet1
+
+    - name: Create Private Subnet 2
+      ec2_vpc_subnet:
+        state: present
+        vpc_id: "{{VPC1.vpcs[0].vpc_id}}"
+        region: "{{region}}"
+        cidr: "{{Private_cidr2}}"
+        resource_tags:
+          Name: private Subnet2
+      register: private_subnet2
+
+    - name: Create Private Subnet 3
+      ec2_vpc_subnet:
+        state: present
+        vpc_id: "{{VPC1.vpcs[0].vpc_id}}"
+        region: "{{region}}"
+        cidr: "{{Private_cidr3}}"
+        resource_tags:
+          Name: private Subnet3
+      register: private_subnet3
 
 
-# - name: Create VPC and Subnet
-#   hosts: localhost
-#   ec2_vpc_net:
-#     name: vpc-ansible
-#     state: present
-#     region: "{{ region }}"
-#     cidr_block: 10.0.0.0/16
-#     tags: "{{ tag-env }}"
-#     subnets:
-#       - cidr: 10.0.1.0/24
-#         resource_tags: "{{ tag-env }}"
-#       - cidr: 10.0.2.0/24
-#         resource_tags: "{{ tag-env }}"
-#       - cidr: 10.0.3.0/24
-#         resource_tags: "{{ tag-env }}"
-#     route_tables:
-#       - subnets:
-#         - 10.0.2.0/24
-#         - 10.0.3.0/24
-#         routes:
-#           - dest: 0.0.0.0/0
-#             gw: igw
-#     wait: yes
-#     internet_gateway: yes
-#     tenancy: dedicated
-        # resource_tags:
-        #   Name: "Test VPC"
-  # register: vpc
+    - name: Create Public Subnet 1
+      ec2_vpc_subnet:
+        state: present
+        vpc_id: "{{VPC1.vpcs[0].vpc_id}}"
+        region: "{{region}}"
+        cidr: "{{Public_cidr1}}"
+        resource_tags:
+          Name: Public Subnet1
+      register: public_subnet1
 
+    - name: Create Public Subnet 2
+      ec2_vpc_subnet:
+        state: present
+        vpc_id: "{{VPC1.vpcs[0].vpc_id}}"
+        region: "{{region}}"
+        cidr: "{{Public_cidr2}}"
+        resource_tags:
+          Name: public Subnet2
+      register: public_subnet2
 
-# - ec2_vpc:
-#     state: present
-#     cidr_block: 10.0.0.0/16
-#     resource_tags: { "Environment" : "{{tag-env}}" }
-#     subnets:
-#       - cidr: 10.0.1.0/24
-#         # az: us-west-2c
-#         resource_tags: { "Environment" : "{{tag-env}}" }
-#       - cidr: 10.0.2.0/24
-#         # az: us-west-2b
-#         resource_tags: { "Environment" : "{{tag-env}}" }
-#       - cidr: 10.0.3.0/24
-#         # az: us-west-2a
-#         resource_tags: { "Environment" : "{{tag-env}}" }
-#     internet_gateway: True
-#     route_tables:
-#       - subnets:
-#           - 10.0.2.0/24
-#           - 10.0.3.0/24
-#         routes:
-#           - dest: 0.0.0.0/0
-#             gw: igw
-#           - subnets:
-#               - 10.0.1.0/24
-#             routes:
-#               - dest: 0.0.0.0/0
-#                 gw: igw
-#         region: "{{region}}"
-#     register: vpc
-
-
-
-
-
-# - name: To set up internet gateway
-#   hosts: all
-#   tasks:
-#     - name: Create VPC and Subnet
-#       ec2_vpc:
-#         state: present
-#         region: "{{region}}"
-#         cidr_block: 10.0.0.0/16
-#         subnets:
-#           - cidr: 10.0.0.0/16
-#             resource_tags: {"Name":"Test Subnet"}
-#         route_tables:
-#           - subnets:
-#             - 20.0.0.0/16
-#             routes:
-#               - dest: 0.0.0.0/0
-#                 gw: igw
-#         wait: yes
-#         internet_gateway: yes
-#         resource_tags:
-#           Name: "Test VPC"
-#       register: vpc
+    - name: Create Public Subnet 3
+      ec2_vpc_subnet:
+        state: present
+        vpc_id: "{{VPC1.vpcs[0].vpc_id}}"
+        region: "{{region}}"
+        cidr: "{{Public_cidr3}}"
+        resource_tags:
+          Name: public Subnet3
+      register: public_subnet3
