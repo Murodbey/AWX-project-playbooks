@@ -1,54 +1,47 @@
----
-- name: Test playbook
-  hosts: all             #host ipaddr        
-  become: true
-  become_method: sudo
-  connection: ssh
+- name: Install necessary packages
+  package:
+    name: murodbey_wordpress
+    state: latest
+  with_items:
+    - epel-release
+    - wget
+    - unzip
+    - mariadb-server
   ignore_errors: true
-  tasks:
-    - name: Install necessary packages
-      package:
-        name: murodbey_wordpress
-        state: latest
-      with_items:
-       - epel-release
-       - wget
-       - unzip
-       - mariadb-server
-      ignore_errors: true
-      notify: MARIADB RESTART
+  notify: MARIADB RESTART
 
 
-    - name: Install epel-release
-      shell: "sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y"
+- name: Install epel-release
+  shell: "sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y"
 
-    - name: config manager enabled
-      shell: "sudo yum-config-manager --enable remi-php72"
+- name: config manager enabled
+  shell: "sudo yum-config-manager --enable remi-php72"
 
-    - name : update httpd PHP
-      shell: "sudo yum install httpd php php-common php-opcache php-mcrypt php-cli php-gd php-curl php-mysql mysql -y"
-      ignore_errors: true
-      notify: Restart httpd
+- name : update httpd PHP
+  shell: "sudo yum install httpd php php-common php-opcache php-mcrypt php-cli php-gd php-curl php-mysql mysql -y"
+  ignore_errors: true
+  notify: Restart httpd
 
 
-    - name: Download wordpress Package
-      get_url:
-        url: "https://wordpress.org/wordpress-{{WORDPRESS_VERSION}}.tar.gz"
-        dest: /tmp/
+- name: Download wordpress Package
+  get_url:
+    url: "https://wordpress.org/wordpress-{{WORDPRESS_VERSION}}.tar.gz"
+    dest: /tmp/
 
-    - name: Unzip wordpres file
-      unarchive:
-        src: "/tmp/wordpress-{{WORDPRESS_VERSION}}.tar.gz"
-        dest: "/var/www/html"
-        remote_src: yes
-      become: yes
-      become_method: sudo
+- name: Unzip wordpres file
+  unarchive:
+    src: "/tmp/wordpress-{{WORDPRESS_VERSION}}.tar.gz"
+    dest: "/var/www/html"
+    remote_src: yes
+  become: yes
+  become_method: sudo
 
-    - name: Move files to html folder
-      shell: "mv /var/www/html/wordpress/* /var/www/html"
-      become: yes
-      become_method: sudo
-      ignore_errors: yes
+- name: Move files to html folder
+  shell: "mv /var/www/html/wordpress/* /var/www/html"
+  become: yes
+  become_method: sudo
+  ignore_errors: yes
+    
 
 # ---
 # - name: Test playbook
