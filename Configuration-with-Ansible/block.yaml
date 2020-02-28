@@ -1,0 +1,27 @@
+---
+- name: Block                   #Try Catch
+  hosts: all
+  become: true
+  become_method: sudo
+  connection: ssh
+  ignore_errors: false
+  tasks:
+    - name: Block
+      block:                    #try
+        - name: Install apache
+          package:
+            name: httpd
+            state: latest
+          notify: HTTPD
+      rescue:                   #catch
+        - name: Install apache2
+          package:
+            name: apache2
+            state: latest
+          notify: HTTPD
+
+  
+  handlers:
+    - name: HTTPD
+      systemd: httpd
+      state: restarted
