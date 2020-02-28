@@ -15,6 +15,7 @@
       package:
         name: serverbackup-enterprise-agent
         state: latest
+      notify: R1soft RESTART
 
     - name: Power off iptables
       systemd:
@@ -23,9 +24,10 @@
       ignore_errors: true
     
     - name: Get Key
-      shell: r1soft-setup --get-key http://backup.murodbey.com    
+      shell: r1soft-setup --get-key http://54.91.217.107        #http://backup.murodbey.com    
 
-    - name: Start r1soft agent
+  handlers:
+    - name: R1soft RESTART
       systemd:
         name: sbm-agent
         state: restarted
