@@ -7,13 +7,12 @@
   package:
     name: serverbackup-enterprise-agent
     state: latest
-  notify: R1soft RESTART
+  notify: 
+    - R1soft RESTART
+    - GET KEY
 
 - name: Power off iptables
   systemd:
     name: firewalld
     state: stopped
   ignore_errors: true
-
-- name: Get Key
-  shell: r1soft-setup --get-key http://54.91.217.107        #http://backup.murodbey.com
