@@ -1,6 +1,6 @@
 ---
 - name: Test playbook
-  hosts: "{{host_ip}}"              #host ipaddr        
+  hosts: all             #host ipaddr        
   become: true
   become_method: sudo
   connection: ssh
@@ -16,25 +16,29 @@
        - unzip
        - mariadb-server
       ignore_errors: true
+      notify: MARIADB RESTART
 
 
     - name: Install epel-release
       shell: "sudo yum install http://rpms.remirepo.net/enterprise/remi-release-7.rpm -y"
+
     - name: config manager enabled
       shell: "sudo yum-config-manager --enable remi-php72"
+
     - name : update httpd PHP
       shell: "sudo yum install httpd php php-common php-opcache php-mcrypt php-cli php-gd php-curl php-mysql mysql -y"
       ignore_errors: true
+      notify: Restart httpd
 
 
     - name: Download wordpress Package
       get_url:
-        url: https://wordpress.org/wordpress-5.2.1.tar.gz
+        url: "https://wordpress.org/wordpress-{{WORDPRESS_VERSION}}.tar.gz"
         dest: /tmp/
 
     - name: Unzip wordpres file
       unarchive:
-        src: "/tmp/wordpress-5.2.1.tar.gz"
+        src: "/tmp/wordpress-{{WORDPRESS_VERSION}}.tar.gz"
         dest: "/var/www/html"
         remote_src: yes
       become: yes
@@ -46,30 +50,19 @@
       become_method: sudo
       ignore_errors: yes
 
-    - name: Restart httpd
-      systemd:
-        name: httpd
-        state: restarted
-        enabled: yes
-      become: yes
-      become_method: sudo
-
-
-
----
-- name: Test playbook
-  hosts: localhost        
-  become: true
-  become_method: sudo
-  connection: ssh
-  ignore_errors: true
-  tasks:
-    - name:    
-      route53:
-        state: create
-        zone: murodbey.com
-        record: wordpress.murodbey.com
-        type: A
-        ttl: 300
-        value: 54.185.82.220
-      
+# ---
+# - name: Test playbook
+#   hosts: localhost        
+#   become: true
+#   become_method: sudo
+#   connection: ssh
+#   ignore_errors: true
+#   tasks:
+#     - name:    
+#       route53:
+#         state: create
+#         zone: murodbey.com
+#         record: wordpress.murodbey.com
+#         type: A
+#         ttl: 300
+#         value: 54.185.82.220
