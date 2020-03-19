@@ -1,7 +1,5 @@
 # AWX_PROJECTS
 
-# Terraform_projects
-
 ## Dear Coder,
 
 ### When I wrote this code, only I and God 
