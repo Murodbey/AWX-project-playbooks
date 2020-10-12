@@ -1,0 +1,2 @@
+- import_tasks: set_image.yml
+- import_tasks: compose.yml
