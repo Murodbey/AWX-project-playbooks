@@ -1,0 +1,97 @@
+- hosts: all
+  become: yes
+  tasks:
+   - name: Check OS version
+     fail:
+       msg: "Playbook works on RedHat/CentOS 7 only!!!"
+     when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int < 7
+
+   - name: Disable SELinux
+     selinux:
+       policy: targeted
+       state: permissive
+     ignore_errors: true
+
+   - name: Stop and disable firewalld.
+     service:
+       name: firewalld
+       state: stopped
+       enabled: False
+     ignore_errors: true
+
+   - name: Disable swap
+     command: "{{item}}"
+     with_items:
+      - cp /etc/fstab /root/fstab
+      - sed -i /"swap"/d /etc/fstab
+      - swapoff -a
+     ignore_errors: true
+
+   - name: Upgrade kernel
+     yum: name=kernel state=latest
+
+   - name: Rebooting ...
+     shell: "sleep 3 && reboot"
+     async: 1
+     poll: 0
+     register: rebooting
+     ignore_errors: true
+
+   - name: Wait for rebooted servers to come back
+     local_action: wait_for host={{ ansible_ssh_host | default(inventory_hostname) }} state=started port=22 delay=30 timeout=300 connect_timeout=15
+     when: rebooting|changed
+
+   - name: Add Docker repository
+     get_url:
+       url: https://download.docker.com/linux/centos/docker-ce.repo
+       dest: /etc/yum.repos.d/docker-ce.repo
+       mode: 0644
+
+   - name: Install Docker-CE
+     yum:
+       name: docker-ce
+       state: present
+       update_cache: true
+
+   - name: Creating Kubernetes repository
+     yum_repository:
+      name: Kubernetes
+      description: Kubernetes YUM repository
+      baseurl: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+      gpgkey: https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+      gpgcheck: yes
+
+   - name: Installing Kubernetes
+     yum:
+       name: "{{ packages }}"
+       state: latest
+     vars:
+       packages:
+       - kubelet
+       - kubeadm
+       - kubectl
+
+   - name: Start and enable docker.
+     service:
+       name: docker
+       state: started
+       enabled: True
+
+   - name: Start and enable kubelet.
+     service:
+       name: kubelet
+       state: started
+       enabled: True
+
+   - name: sysctl update-1
+     sysctl:
+      name: net.bridge.bridge-nf-call-iptables
+      value: 1
+      state: present
+
+   - name: sysctl update-2
+     sysctl:
+      name: net.bridge.bridge-nf-call-ip6tables
+      value: 1
+      state: present
+

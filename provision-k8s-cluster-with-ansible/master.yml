@@ -1,0 +1,74 @@
+- hosts: kubernetes_master
+  become: yes
+  tasks:
+    - name: Installing useful packages
+      yum:
+        name: "{{ packages }}"
+        state: latest
+      vars:
+        packages:
+        - vim
+        - wget
+        - elinks
+        - telnet
+        - bind-utils
+
+    - name: Initialize Kubernetes cluster
+      shell: "kubeadm init --pod-network-cidr=10.244.0.0/16 &>> cluster_initialized.log"
+      args:
+        chdir: $HOME
+        creates: cluster_initialized.log
+
+    - name: Create kube config dir
+      file:
+        path: $HOME/.kube
+        state: directory
+        mode: 0755
+
+    - name: Configure kube config
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: $HOME/.kube/config
+        remote_src: yes
+        owner: root
+        group: root
+        mode: 0640
+
+    - name: Install flannel
+      shell: "kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/v0.9.1/Documentation/kube-flannel.yml &>> pod_network_setup.log"
+      args:
+        chdir: $HOME
+        creates: pod_network_setup.log
+
+    - name: Downloading Kubernetes dashbaord
+      get_url:
+        url: https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+        dest: /root/kubernetes-dashboard.yaml
+        force: yes
+
+    - name: Setting up dashboard public IP
+      lineinfile:
+        path: /root/kubernetes-dashboard.yaml
+        line: "  externalIPs:\n    - {{ hostvars['master']['ansible_default_ipv4']['address'] }}"
+
+    - name: Install Kubernetes dashboard
+      shell: "kubectl apply -f /root/kubernetes-dashboard.yaml &>> dashbaord_setup.log"
+
+    - name: Create a ServiceAccount
+      shell: kubectl create serviceaccount cluster-admin-dashboard-sa
+      args:
+        chdir: $HOME/.kube/
+        creates: admin_token
+
+    - name: Create admin role
+      shell: kubectl create clusterrolebinding cluster-admin-dashboard-sa --clusterrole=cluster-admin   --serviceaccount=default:cluster-admin-dashboard-sa 
+      args:
+        chdir: $HOME/.kube/
+        creates: admin_token
+
+    - name: Log admin token
+      shell: "kubectl describe secret $( kubectl get secrets | grep cluster-admin-dashboard-sa | awk '{print $1}' ) &>> $HOME/.kube/admin_token"
+      args:
+        chdir: $HOME/.kube/
+        creates: admin_token
+
