@@ -1,0 +1,33 @@
+---
+- name: Install kibana
+  yum: 
+    name: kibana
+    state: latest 
+    update_cache: yes
+
+- name: Create kibana config
+  template:
+    src: kibana.config.j2
+    dest: /etc/kibana/kibana.yml
+  notify: Restart kibana
+
+- name: Force systemd to reread configs
+  systemd: daemon_reload=yes
+
+- name: Start and Enable Kibana
+  service:
+    name: kibana.service
+    state: started
+    enabled: yes
+
+- name: Create nginx.conf file
+  template:
+    src: elk.conf.j2
+    dest: /etc/nginx/conf.d/elk.conf
+  notify: Restart Nginx
+
+
+# - name: Create kibanaadmin and password
+#   shell: echo "kibanaadmin:`openssl passwd -apr1`" | sudo tee -a /etc/nginx/htpasswd.users
+#   args:
+#     creates: htpasswd.users

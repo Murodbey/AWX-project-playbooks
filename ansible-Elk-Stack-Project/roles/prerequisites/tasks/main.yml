@@ -1,0 +1,23 @@
+---
+- name: Install Oracle Java 8
+  yum: 
+    name: 
+    - epel-release
+    - java-1.8.0-openjdk
+    - java-1.8.0-openjdk-devel
+    state: latest
+
+- name: Install Ansible and more
+  yum:
+    name:
+    - wget
+    - nginx
+    state: latest
+
+- name: Start and Enable Nginx
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+  notify: Restart Nginx
+  

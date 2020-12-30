@@ -1,0 +1,40 @@
+---
+- name: Install logstash
+  yum: 
+    name: logstash
+    state: latest 
+    update_cache: yes
+
+- name: Create 02-beats-input.conf
+  template:
+    src: 02-beats-input.conf.j2
+    dest: /etc/logstash/conf.d/02-beats-input.conf
+  notify: Restart Logstash
+
+- name: Create 10-syslog-filter.conf
+  template:
+    src: 10-syslog-filter.conf.j2
+    dest: /etc/logstash/conf.d/10-syslog-filter.conf
+  notify: Restart Logstash
+
+- name: Create 30-elasticsearch-output.conf
+  template:
+    src: 30-elasticsearch-output.conf.j2
+    dest: /etc/logstash/conf.d/30-elasticsearch-output.conf
+  notify: Restart Logstash
+
+# - name: 
+#   shell: sudo -u logstash /usr/share/logstash/bin/logstash --path.settings /etc/logstash -t
+#   notify: Restart Logstash
+
+- name: Force systemd to reread configs
+  systemd: daemon_reload=yes
+
+- name: Start and Enable Logstash
+  service:
+    name: logstash.service
+    state: started
+    enabled: yes
+
+
+    

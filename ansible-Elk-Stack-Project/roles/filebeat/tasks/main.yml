@@ -1,0 +1,22 @@
+---
+- name: Install filebeat
+  yum: 
+    name: filebeat
+    state: latest 
+    update_cache: yes
+
+- name: Create filebeat config
+  template:
+    src: filebeat.config.j2
+    dest: /etc/filebeat/filebeat.yml
+  notify: Restart filebeat
+
+- name: Force systemd to reread configs
+  systemd: daemon_reload=yes
+
+- name: Enable filebeat.service
+  service:
+    name: filebeat.service
+    state: started
+    enabled: yes
+

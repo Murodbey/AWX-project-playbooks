@@ -1,0 +1,46 @@
+- hosts: localhost
+  tasks:
+
+  - name: Install Prerequisites
+    import_role:
+      name: prerequisites
+
+  - name: Install cert
+    import_role:
+      name: geerlingguy.certbot
+
+  - name: Disable SELinux
+    selinux:
+      state: disabled
+
+  - name: Elk_Stack Repo
+    import_role:
+      name: elk_stack
+
+  - name: Install ElasticSearch
+    import_role:
+      name: elasticsearch
+  
+  - name: Install Kibana
+    import_role:
+      name: kibana
+
+  - name: Install Logstash
+    import_role:
+      name: logstash 
+
+- hosts: remote
+  tasks:
+
+  - name: Disable SELinux
+    selinux:
+      state: disabled
+
+  - name: Elk_Stack Repo
+    import_role:
+      name: elk_stack
+
+  - name: Install Filebeat
+    import_role:
+      name: filebeat
+

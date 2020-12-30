@@ -1,0 +1,8 @@
+---
+- name: Restart Logstash
+  service:
+    state: restarted
+    name: logstash.service
+
+
+  
